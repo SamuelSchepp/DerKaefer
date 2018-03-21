@@ -25,14 +25,51 @@ repositories {
     jcenter()
 }
 
-jar {
-    manifest {
-        attributes  'Main-Class': 'de.samuelschepp.derkaefer.Game',
-                    "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+distZip {
+    into(project.name) {
+        from '.'
+        include 'res/*'
+        include 'lib/*'
+    }
+
+    into(project.name) {
+        from 'src/main/script'
+        include 'run.sh'
+        fileMode = 0755
+    }
+
+    into(project.name) {
+        from 'build/scripts'
+        exclude '*'
     }
 }
 
-run {
-    println new File(".").absolutePath
-    systemProperty 'java.library.path',  "${buildDir}/resources/main/lib"
+
+
+jar {
+    manifest {
+        attributes  'Main-Class': 'de.samuelschepp.derkaefer.Game',
+                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+    }
+}
+
+task buildRunable {
+    dependsOn build
+
+    doLast {
+        copy {
+            from zipTree("${buildDir}/distributions/Der Kaefer.zip")
+            into "${buildDir}/run"
+        }
+    }
+}
+
+task runBuild {
+    dependsOn buildRunable
+
+    doLast {
+        exec {
+            commandLine "${buildDir}/run/Der Kaefer/run.sh"
+        }
+    }
 }

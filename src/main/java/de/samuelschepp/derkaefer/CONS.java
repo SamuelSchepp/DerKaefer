@@ -12,7 +12,7 @@ public interface CONS {
 
 	// Main
 	public GameMode STARTING_MODE = GameMode.Menu;
-	public String VERSION = "1.1";
+	public String VERSION = "1.2 gradle";
 	public String CHANGELOG = "";
 	public String DATE = "22.07.12";
 	public String SAVE_FILE_LOCATION = "Der Kaefer - Einstellungen.ini";
