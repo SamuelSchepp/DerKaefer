@@ -29,7 +29,6 @@ distZip {
     into(project.name) {
         from '.'
         include 'res/*'
-        include 'lib/*'
     }
 
     into(project.name) {
@@ -57,9 +56,23 @@ task buildRunable {
     dependsOn build
 
     doLast {
+        println(configurations.compile.files)
+        copy {
+            from configurations.compile.files
+            into "${buildDir}/natives"
+        }
         copy {
             from zipTree("${buildDir}/distributions/Der Kaefer.zip")
             into "${buildDir}/run"
+        }
+        copy {
+            from zipTree("${buildDir}/natives/jinput-platform-2.0.5-natives-linux.jar")
+            from zipTree("${buildDir}/natives/jinput-platform-2.0.5-natives-osx.jar")
+            from zipTree("${buildDir}/natives/jinput-platform-2.0.5-natives-windows.jar")
+            from zipTree("${buildDir}/natives/lwjgl-platform-2.9.1-natives-linux.jar")
+            from zipTree("${buildDir}/natives/lwjgl-platform-2.9.1-natives-osx.jar")
+            from zipTree("${buildDir}/natives/lwjgl-platform-2.9.1-natives-windows.jar")
+            into "${buildDir}/run/Der Kaefer/lib"
         }
     }
 }
